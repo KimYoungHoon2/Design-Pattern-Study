@@ -6,6 +6,7 @@ enum HeroStateType {
 	IDLE,
 	ATTACK,
 	DEFEND,
+	SPECIAL_ATTACK,
 	DIE
 };
 
@@ -33,6 +34,14 @@ public:
 	HeroStateType getStateType() override { return HeroStateType::ATTACK; }
 };
 
+class SpecialAttackState : public HeroState {
+public:
+	void handle() override {
+		cout << "Hero is in Special attack State!" << endl;
+	}
+	HeroStateType getStateType() override { return HeroStateType::SPECIAL_ATTACK; }
+};
+
 class DefenceState : public HeroState {
 public:
 	void handle() override {
@@ -54,8 +63,9 @@ class Hero
 private:
 	HeroState* state;
 	int health;
+	int mp;
 public:
-	Hero(HeroState* state, int hp) : state(state), health(hp) {}
+	Hero(HeroState* state, int hp) : state(state), health(hp), mp(0) {}
 
 	void setState(HeroState* newState)
 	{
@@ -66,7 +76,7 @@ public:
 	void takeDamage(int damage)
 	{
 		health -= damage;
-		cout << "용사에게 " << damage << "데미지 적중. 용사의 남은 체력 : " << health << endl;
+		cout << "용사에게 " << damage << "데미지 적중" << endl;
 
 		if (health <= 0)
 		{
@@ -79,6 +89,17 @@ public:
 			setState(new AttackState);
 		}
 	}
+
+	bool isEnoughMP() { return mp >= 50; } //필살기 사용 가능 판단 메소드
+	bool isDefenceSuccess() { return rand() % 100 < 20; }
+	
+	void increaseMP(int damage) { mp += damage; }
+
+	void useMP() { mp -= 50; }
+
+	int getHp() { return health; }
+	int getMp() { return mp; }
+
 
 	HeroStateType getState() { return state->getStateType(); }
 

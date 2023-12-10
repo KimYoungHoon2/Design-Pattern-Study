@@ -34,7 +34,7 @@ public:
     MonsterStateType getStateType() override { return MonsterStateType::M_ATTACK; }
 };
 
-// 도망 상태
+// 방어 상태
 class M_DefenceState : public MonsterState {
 public:
     void handle() override {
@@ -64,12 +64,10 @@ public:
         delete state;
         state = newState;
     }
-
-
     void takeDamage(int damage)
     {
         health -= damage;
-        cout << "몬스터에게 " << damage << "데미지 적중. 몬스터의 남은체력 : " << health << endl;
+        cout << "몬스터에게 " << damage << "데미지 적중" << endl;
 
         if (health <= 0)
         {
@@ -88,6 +86,8 @@ public:
     void handle() {
         state->handle();
     }
+
+    int getHp() { return health; }
 
     ~Monster() {
         delete state;
